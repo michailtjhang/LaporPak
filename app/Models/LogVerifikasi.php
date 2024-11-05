@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LogVerifikasi extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'log_verifikasi';
     protected $fillable = [
@@ -16,6 +18,16 @@ class LogVerifikasi extends Model
         'tanggal_verifikasi',
         'hasil_verifikasi'
     ];
+
+    protected static $recordEvents = ['updated'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly($this->fillable) // Log hanya kolom di fillable
+            ->useLogName('log_verifikasi') // Nama log opsional
+            ->logOnlyDirty(); // Log hanya perubahan (efektif untuk event update)
+    }
 
     public function aduan()
     {

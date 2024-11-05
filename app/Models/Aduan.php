@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Aduan extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'aduan';
 
@@ -20,6 +22,16 @@ class Aduan extends Model
         'tanggal_pengaduan',
         'status_aduan',
     ];
+
+    protected static $recordEvents = ['created'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly($this->fillable) // Log hanya kolom di fillable
+            ->useLogName('aduan') // Nama log opsional
+            ->logOnlyDirty(); // Log hanya perubahan (efektif untuk event update)
+    }
 
     public function pengguna()
     {
