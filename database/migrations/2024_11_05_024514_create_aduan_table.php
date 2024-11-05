@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('id_aduan')->index();
             $table->string('id_pengguna');
             $table->integer('kategori_aduan')->unsigned();
+            $table->string('prioritas_aduan');
             $table->string('tautan_konten')->nullable();
             $table->text('deskripsi_pengaduan');
             $table->date('tanggal_pengaduan');
