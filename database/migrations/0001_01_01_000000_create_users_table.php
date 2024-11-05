@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('id_number')->index();
+            $table->string('fullname');
+            $table->string('username')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role' , ['manager', 'verified', 'user'])->default('user');
+            $table->string('provider_id')->nullable(); // Menambahkan provider ID
+            $table->string('provider_name')->nullable(); // Menambahkan provider name
+            $table->string('access_token', 500)->nullable(); // Menambahkan access token dengan panjang maksimal 500 karakter
+            $table->string('refresh_token', 500)->nullable(); // Menambahkan refresh token dengan panjang maksimal 500 karakter
             $table->rememberToken();
             $table->timestamps();
         });
