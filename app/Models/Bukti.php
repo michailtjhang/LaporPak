@@ -10,7 +10,7 @@ class Bukti extends Model
     use HasFactory;
 
     protected $table = 'bukti';
-    protected $filable = [
+    protected $fillable = [
         'id_aduan',
         'jenis_bukti',
         'lokasi_file'

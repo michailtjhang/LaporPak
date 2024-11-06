@@ -17,6 +17,7 @@ class Aduan extends Model
         'id_aduan',
         'id_pengguna',
         'kategori_aduan',
+        'prioritas_aduan',
         'tautan_konten',
         'deskripsi_pengaduan',
         'tanggal_pengaduan',
