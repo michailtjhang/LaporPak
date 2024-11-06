@@ -49,7 +49,7 @@
                                 <td class="text-center text-green-500">Selesai</td>
                             @endif
                             <td>{{ $row->updated_at }}</td>
-                            <td>{{ $row->id_agen ?? '' }}</td>
+                            <td>{{ $row->id_agen ?? 'Agen21' }}</td>
                         </tr>
                     @endforeach
             </table>

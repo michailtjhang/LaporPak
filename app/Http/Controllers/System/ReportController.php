@@ -55,7 +55,7 @@ class ReportController extends Controller
         try {
             $file = $request->file('file');
             $fileName = date('YmdHis') . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('files'), $fileName);
+            // $file->move(public_path('files'), $fileName);
 
             $aduan = Aduan::latest()->first();
             $kodeUser = "AD";
@@ -88,7 +88,7 @@ class ReportController extends Controller
 
             return redirect()->intended('tickets')->with('success', 'Laporan Aduan Berhasil');
         } catch (\Throwable $th) {
-            dd($th);
+            return redirect()->intended('tickets')->with('error', 'Laporan Aduan Gagal');
         }
     }
 
