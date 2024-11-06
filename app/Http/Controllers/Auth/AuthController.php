@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         if ($user) {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect()->intended('admin/dashboard');
+                return redirect()->intended('tickets');
             } else {
                 return redirect()->back()->with('error', 'Incorrect password. Please try again.');
             }
