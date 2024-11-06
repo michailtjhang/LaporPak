@@ -24,7 +24,7 @@ class SocialiteController extends Controller
 
         if ($registeredUser) {
             Auth::login($registeredUser);
-            return redirect('dashboard');
+            return redirect()->intended('tickets');
         } else {
             $user = User::updateOrCreate([
                 'provider_id' => $socialUser->id,
@@ -40,6 +40,6 @@ class SocialiteController extends Controller
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect()->intended('tickets');
     }
 }
