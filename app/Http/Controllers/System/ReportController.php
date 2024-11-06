@@ -16,7 +16,7 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $data['aduans'] = Aduan::get();
+        $data['aduans'] = Aduan::where('id_pengguna', Auth::user()->id)->get();
         $countFinished = Aduan::where('status_aduan', '1')->count();
         $countPending = Aduan::where('status_aduan', '0')->count();
         return view('system.reports.index', [

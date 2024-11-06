@@ -42,7 +42,7 @@
                             @else
                                 <td class="text-center text-green-500">Non Urgent</td>
                             @endif
-                            <td>{{ $row->deskripsi_pengaduan }}</td>
+                            <td>{{ Str::limit(strip_tags($row->deskripsi_pengaduan), 100, '...') }}</td>
                             @if ($row->status_aduan == '0')
                                 <td class="text-center text-orange-500">Dalam Proses</td>
                             @else
