@@ -22,7 +22,7 @@
         <div class="w-1/2 p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Sign In</h2>
 
-            <form action="{{ url('login') }}" method="POST" class="space-y-4">
+            <form action="{{ route('login') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <div>
