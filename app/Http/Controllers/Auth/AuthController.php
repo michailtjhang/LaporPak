@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function login()
     {
         if (!empty(Auth::check())) {
-            return redirect()->intended('admin/dashboard');
+            return redirect()->intended('tickets');
         }
         return view('auth.login');
     }
