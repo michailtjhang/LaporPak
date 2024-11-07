@@ -54,8 +54,6 @@ class ReportController extends Controller
             'files.*' => 'file|mimes:jpeg,jpg,png|max:5120' // Validasi tiap file
         ]);
 
-        dd($request->all());
-
         try {
             $file = $request->file('file');
             $fileName = date('YmdHis') . time() . '.' . $file->getClientOriginalExtension();
