@@ -21,22 +21,29 @@ class AuthController extends Controller
     public function auth_login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'emailOrUsername' => 'required|string',
             'password' => 'required',
         ]);
 
         $remember = $request->has('remember') ? true : false;
 
-        $user = User::where('email', $request->email)->first();
-
-        if ($user) {
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect()->intended('tickets');
-            } else {
-                return redirect()->back()->with('error', 'Incorrect password. Please try again.');
-            }
+        if (filter_var($request->emailOrUsername, FILTER_VALIDATE_EMAIL)) {
+            $credentials = ['email' => $request->emailOrUsername, 'password' => $request->password];
         } else {
-            return redirect()->back()->with('error', 'Email not found. Please register first.');
+            $credentials = ['username' => $request->emailOrUsername, 'password' => $request->password];
+        }
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('tickets');
+        } else {
+            // Check if the user exists for more specific error feedback
+            $userExists = User::where('email', $request->emailOrUsername)->orWhere('username', $request->emailOrUsername)->exists();
+            
+            if ($userExists) {
+                return redirect()->back()->with('error', 'Incorrect password. Please try again.');
+            } else {
+                return redirect()->back()->with('error', 'Email or username not found. Please register first.');
+            }
         }
     }
 

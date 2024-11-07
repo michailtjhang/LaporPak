@@ -1,5 +1,9 @@
 @extends('system.layouts.app')
 
+@section('meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
 @endsection

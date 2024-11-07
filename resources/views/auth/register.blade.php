@@ -73,8 +73,13 @@
                     @enderror
                 </div>
 
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" id="show-password" class="mr-2 h-4 w-4 text-pink-600 focus:ring-pink-500 rounded">
+                    <label for="show-password" class="text-sm text-gray-700">Tampilkan Password</label>
+                </div>
+
                 <button type="submit"
-                    class="w-full py-2 px-4 bg-pink-600 text-white font-semibold rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
                     Create Account
                 </button>
 
@@ -90,7 +95,7 @@
 
             <p class="text-center text-sm text-gray-500 mt-4">
                 Sudah Punya Akun?
-                <a href="{{ route('login') }}" class="text-pink-600 hover:underline">Sign In</a>
+                <a href="{{ route('login') }}" class="text-red-600 hover:underline">Sign In</a>
             </p>
         </div>
 
@@ -100,6 +105,17 @@
                 alt="Police in city" class="w-full h-full object-cover" />
         </div>
     </div>
+
+    <script>
+        // JavaScript to toggle password visibility
+        document.getElementById('show-password').addEventListener('change', function () {
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            passwordField.type = this.checked ? 'text' : 'password';
+            confirmPasswordField.type = this.checked ? 'text' : 'password';
+        });
+    </script>
+
 </body>
 
 </html>
