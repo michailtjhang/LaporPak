@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\System;
 
-use App\Http\Controllers\Controller;
 use App\Models\Aduan;
 use App\Models\Bukti;
-use App\Models\KategoriAduan;
 use Illuminate\Http\Request;
+use App\Models\KategoriAduan;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
@@ -17,8 +18,8 @@ class ReportController extends Controller
     public function index()
     {
         $data['aduans'] = Aduan::where('id_pengguna', Auth::user()->id)->get();
-        $countFinished = Aduan::where('status_aduan', '1')->count();
-        $countPending = Aduan::where('status_aduan', '0')->count();
+        $countFinished = Aduan::where('id_pengguna', Auth::user()->id)->where('status_aduan', '1')->count();
+        $countPending = Aduan::where('id_pengguna', Auth::user()->id)->where('status_aduan', '0')->count();
         return view('system.reports.index', [
             'title' => 'Laporan Aduan',
             'data' => $data,
@@ -49,8 +50,11 @@ class ReportController extends Controller
             'prioritas_aduan' => 'required',
             'tautan_konten' => 'required',
             'deskripsi_pengaduan' => 'required|string',
-            'file' => 'required|mimes:jpg,png,jpeg,pdf|max:5000'
+            'files' => 'required|array|max:5', // Memastikan file dalam bentuk array
+            'files.*' => 'file|mimes:jpeg,jpg,png|max:5120' // Validasi tiap file
         ]);
+
+        dd($request->all());
 
         try {
             $file = $request->file('file');
@@ -59,7 +63,7 @@ class ReportController extends Controller
 
             $aduan = Aduan::latest()->first();
             $kodeUser = "AD";
-    
+
             if ($aduan == null) {
                 $id_aduan = $kodeUser . "001";
             } else {

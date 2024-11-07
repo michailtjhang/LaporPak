@@ -20,6 +20,9 @@
                 Laporan</a>
         </div>
         <div class="overflow-x-auto">
+            
+            @include('_message')
+
             <table id="dataTable" class="table table-bordered table-hover table-stripped">
                 <thead>
                     <tr>

@@ -22,6 +22,8 @@
         <div class="w-1/2 p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Sign In</h2>
 
+            @include('_message')
+
             <form action="{{ route('login') }}" method="POST" class="space-y-4">
                 @csrf
 
@@ -29,12 +31,20 @@
                     <label for="email" class="block text-sm text-gray-700">Email</label>
                     <input type="text" id="email" name="email" placeholder="Masukkan Email / No Tlp"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600">
+
+                    @error('email')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm text-gray-700">Password</label>
                     <input type="password" id="password" name="password" placeholder="Password"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600">
+
+                    @error('password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex justify-between items-center">

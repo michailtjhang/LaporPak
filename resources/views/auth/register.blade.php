@@ -17,6 +17,8 @@
                 Create an account
             </h2>
 
+            @include('_message')
+
             <form action="" method="POST" class="space-y-4">
                 @csrf
 
@@ -24,7 +26,7 @@
                     <div class="w-1/2">
                         <label for="fullName" class="block text-sm text-gray-700">Full Name</label>
                         <input type="text" id="fullname" name="fullname" placeholder="Masukkan Nama Lengkap"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600" />
+                            class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600 @error('fullname') border-red-500 @enderror" />
 
                         @error('fullname')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -33,7 +35,7 @@
                     <div class="w-1/2">
                         <label for="username" class="block text-sm text-gray-700">Username</label>
                         <input type="text" id="username" name="username" placeholder="Masukkan Username"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600" />
+                            class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600 @error('username') border-red-500 @enderror" />
 
                         @error('username')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -44,7 +46,7 @@
                 <div>
                     <label for="email" class="block text-sm text-gray-700">Email</label>
                     <input type="email" id="email" name="email" placeholder="Masukkan Email"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600" />
+                        class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600 @error('email') border-red-500 @enderror" />
 
                     @error('email')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -54,7 +56,7 @@
                 <div>
                     <label for="password" class="block text-sm text-gray-700">Password</label>
                     <input type="password" id="password" name="password" placeholder="Masukkan Password"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600" />
+                        class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600 @error('password') border-red-500 @enderror" />
 
                     @error('password')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -64,7 +66,11 @@
                 <div>
                     <label for="confirmPassword" class="block text-sm text-gray-700">Confirm Password</label>
                     <input type="password" id="confirmPassword" placeholder="Konfirmasi Password"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600" />
+                        class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-pink-600 @error('confirmPassword') border-red-500 @enderror" />
+
+                    @error('confirmPassword')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <button type="submit"
