@@ -12,8 +12,8 @@ class Bukti extends Model
     protected $table = 'bukti';
     protected $fillable = [
         'id_aduan',
-        'jenis_bukti',
-        'lokasi_file'
+        'url_file',
+        'id_file',
     ];
 
     public function aduan()

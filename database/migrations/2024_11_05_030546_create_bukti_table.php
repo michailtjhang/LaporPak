@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('bukti', function (Blueprint $table) {
             $table->id();
             $table->string('id_aduan');
-            $table->string('jenis_bukti');
-            $table->string('lokasi_file');
+            $table->string('url_file');
+            $table->string('id_file');
             $table->timestamps();
         });
     }

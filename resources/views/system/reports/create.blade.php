@@ -55,9 +55,9 @@
                 <label class="block text-xl font-semibold text-black mb-2">Lokasi Kejadian</label>
                 <input type="text"
                     class="block w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded focus:outline-none focus:border-blue-500"
-                    name="tautan_konten" placeholder="Masukkan lokasi kejadian">
+                    name="lokasi_kejadian" placeholder="Masukkan lokasi kejadian">
 
-                @error('tautan_konten')
+                @error('lokasi_kejadian')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -74,24 +74,13 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-xl font-semibold text-black mb-2">File Pendukung</label>
-                <input type="file" name="file"
-                    class="block w-full text-gray-500 border border-gray-300 py-2 px-4 rounded focus:outline-none focus:border-blue-500">
-                <p class="text-gray-500 text-sm">Tambahkan file pendukung untuk menguatkan laporan.</p>
-
-                @error('file')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- <div class="mb-4">
                 <label class="block text-xl font-semibold text-black mb-2">File Pendukung (Maksimal 5 file)</label>
                 <div id="file-dropzone" class="dropzone border border-gray-300 bg-white p-4 rounded"></div>
                 <p class="text-gray-500 text-sm">Tambahkan file pendukung untuk menguatkan laporan.</p>
                 @error('file')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
-            </div> --}}
+            </div>
 
             <div class="flex justify-between mt-5">
                 <button type="button" onclick="history.back()" class="p-2 bg-gray-400 text-white rounded">Kembali</button>
@@ -157,12 +146,10 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            console.log("Files uploaded successfully:", response);
-                            location.reload(); // Reload page or handle success
+                            history.back();
                         },
                         error: function(xhr) {
-                            console.log("File upload error:", xhr.responseJSON);
-                            // Handle errors, e.g., show error messages from xhr.responseJSON.errors
+                            history.back();
                         }
                     });
                 });

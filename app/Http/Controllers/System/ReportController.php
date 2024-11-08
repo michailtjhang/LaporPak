@@ -48,37 +48,13 @@ class ReportController extends Controller
         Request()->validate([
             'kategori_aduan' => 'required',
             'prioritas_aduan' => 'required',
-            'tautan_konten' => 'required',
+            'lokasi_kejadian' => 'required',
             'deskripsi_pengaduan' => 'required|string',
-            'file' => 'required|mimes:jpeg,jpg,png|max:5120',
             'files' => 'required|array|max:5', // Memastikan file dalam bentuk array
             'files.*' => 'file|mimes:jpeg,jpg,png|max:5120' // Validasi tiap file
         ]);
 
         try {
-            // if ($request->hasFile('files')) {
-            //     foreach ($request->file('files') as $file) {
-            //         $originalPath = $file->getRealPath(); // Get the original path of the uploaded file
-
-            //         // Now, you can use the original path to upload to Cloudinary
-            //         $cloudinaryResponse = Cloudinary::upload($originalPath, [
-            //             'folder' => 'uploads', // Set your desired folder in Cloudinary
-            //             'use_filename' => true,
-            //             'unique_filename' => false
-            //         ]);
-
-            //         // Optionally, store the Cloudinary URL or public ID if needed
-            //         $cloudinaryUrl = $cloudinaryResponse->getSecurePath();
-
-            //         // Save the Cloudinary URL or other information to your database as needed
-            //         // Example: $fileModel->path = $cloudinaryUrl;
-            //     }
-            // }
-
-            $file = $request->file('file');
-            $fileName = date('YmdHis') . time() . '.' . $file->getClientOriginalExtension();
-            // $file->move(public_path('files'), $fileName);
-
             $aduan = Aduan::latest()->first();
             $kodeUser = "AD";
 
@@ -91,26 +67,44 @@ class ReportController extends Controller
                 $id_aduan = $kodeUser . sprintf("%03s", $urutan);
             }
 
+            // Create the Aduan record first
             Aduan::create([
                 'id_aduan' => $id_aduan,
                 'id_pengguna' => Auth::user()->id,
                 'kategori_aduan' => $request->kategori_aduan,
                 'prioritas_aduan' => $request->prioritas_aduan,
-                'tautan_konten' => $request->tautan_konten,
+                'lokasi_kejadian' => $request->lokasi_kejadian,
                 'deskripsi_pengaduan' => $request->deskripsi_pengaduan,
                 'tanggal_pengaduan' => date('Y-m-d'),
                 'status_aduan' => 0,
             ]);
 
-            Bukti::create([
-                'id_aduan' => $id_aduan,
-                'jenis_bukti' => $file->getClientOriginalExtension(),
-                'lokasi_file' => $fileName
-            ]);
+            // Upload each file to Cloudinary and create Bukti records
+            foreach ($request->file('files') as $file) {
+                $originalPath = $file->getRealPath();
 
-            return redirect()->intended('tickets')->with('success', 'Laporan Aduan Berhasil');
+                // Upload to Cloudinary
+                $cloudinaryResponse = cloudinary()->upload($originalPath, [
+                    'folder' => 'files',
+                    'use_filename' => true,
+                    'unique_filename' => true,
+                ]);
+
+                // Get Cloudinary URL and public ID
+                $cloudinaryUrl = $cloudinaryResponse->getSecurePath();
+                $publicId = $cloudinaryResponse->getPublicId();
+
+                // Save the Cloudinary URL in Bukti
+                Bukti::create([
+                    'id_aduan' => $id_aduan,
+                    'url_file' => $cloudinaryUrl, // Store the Cloudinary URL
+                    'id_file' => $publicId, // Store the Cloudinary public ID
+                ]);
+            }
+
+            return redirect('tickets')->with('success', 'Laporan Aduan Berhasil');
         } catch (\Throwable $th) {
-            return redirect()->intended('tickets')->with('error', 'Laporan Aduan Gagal');
+            return redirect('tickets')->with('error', 'Laporan Aduan Gagal');
         }
     }
 
@@ -119,7 +113,18 @@ class ReportController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = Aduan::where('id_aduan', $id)
+        ->where('id_pengguna', Auth::user()->id)
+        ->with('kategori') 
+        ->first();
+
+        $images = Bukti::where('id_aduan', $id)->get();
+
+        return view('system.reports.show', [
+            'title' => 'Detail Laporan Aduan ' . $data->id_aduan,
+            'data' => $data,
+            'images' => $images
+        ]);
     }
 
     /**

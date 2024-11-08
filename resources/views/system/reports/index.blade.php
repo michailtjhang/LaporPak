@@ -20,19 +20,19 @@
                 Laporan</a>
         </div>
         <div class="overflow-x-auto">
-            
+
             @include('_message')
 
             <table id="dataTable" class="table table-bordered table-hover table-stripped">
                 <thead>
                     <tr>
                         <th class="text-center">No</th>
-                        <th>Kode Laporan</th>
-                        <th>Prioritas</th>
-                        <th>Subject</th>
-                        <th>Status</th>
-                        <th>Terakhir Update</th>
-                        <th>Agen</th>
+                        <th class="text-center">Kode Laporan</th>
+                        <th class="text-center">Prioritas</th>
+                        <th class="text-center">Subject</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Terakhir Update</th>
+                        <th>Lampiran</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,18 +41,35 @@
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $row->id_aduan }}</td>
                             @if ($row->prioritas_aduan == 'urgent')
-                                <td class="text-center text-pink-500">Urgent</td>
+                                <td>
+                                    <span
+                                        class="px-2 py-1 rounded-full bg-red-500 text-red-100 text-xs font-semibold">URGENT</span>
+                                </td>
                             @else
-                                <td class="text-center text-green-500">Non Urgent</td>
+                                <td>
+                                    <span
+                                        class="px-2 py-1 rounded-full bg-pink-100 text-pink-500 text-xs font-semibold">NON
+                                        URGENT</span>
+                                </td>
                             @endif
                             <td>{{ Str::limit(strip_tags($row->deskripsi_pengaduan), 100, '...') }}</td>
                             @if ($row->status_aduan == '0')
-                                <td class="text-center text-orange-500">Dalam Proses</td>
+                                <td>
+                                    <span
+                                        class="px-2 py-1 rounded-full bg-yellow-400 text-yellow-900 text-xs font-semibold">Belum
+                                        Selesai</span>
+                                </td>
                             @else
-                                <td class="text-center text-green-500">Selesai</td>
+                                <td>
+                                    <span
+                                        class="px-2 py-1 rounded-full bg-green-400 text-green-900 text-xs font-semibold">Selesai</span>
+                                </td>
                             @endif
-                            <td>{{ $row->updated_at }}</td>
-                            <td>{{ $row->id_agen ?? 'Agen21' }}</td>
+                            <td>{{ $row->updated_at->locale('in_id')->diffForHumans() }}</td>
+                            <td>
+                                <a href="{{ route('tickets.show', $row->id_aduan) }}"
+                                    class="p-2 my-4 bg-blue-500 text-white rounded shadow w-8 h-8">Lihat</a>
+                            </td>
                         </tr>
                     @endforeach
             </table>

@@ -13,4 +13,9 @@ class KategoriAduan extends Model
     protected $fillable = [
         'nama_kategori',
     ];
+
+    public function aduan()
+    {
+        return $this->hasMany(Aduan::class);
+    }
 }
