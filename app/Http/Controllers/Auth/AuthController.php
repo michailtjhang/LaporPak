@@ -13,7 +13,11 @@ class AuthController extends Controller
     public function login()
     {
         if (!empty(Auth::check())) {
-            return redirect()->intended('tickets');
+            if (Auth::user()->role->name == 'Manager') {
+                return redirect()->intended('dashboard');
+            } else {
+                return redirect()->intended('tickets');
+            }
         }
         return view('auth.login');
     }
@@ -34,11 +38,15 @@ class AuthController extends Controller
         }
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('tickets');
+            if (Auth::user()->role->name == 'Manager') {
+                return redirect()->intended('dashboard');
+            } else {
+                return redirect()->intended('tickets');
+            }
         } else {
             // Check if the user exists for more specific error feedback
             $userExists = User::where('email', $request->emailOrUsername)->orWhere('username', $request->emailOrUsername)->exists();
-            
+
             if ($userExists) {
                 return redirect()->back()->with('error', 'Incorrect password. Please try again.');
             } else {

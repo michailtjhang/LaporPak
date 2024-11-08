@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\System\MenuController;
+use App\Http\Controllers\System\RoleController;
 use App\Http\Controllers\System\ReportController;
+use App\Http\Controllers\Auth\SocialiteController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -23,10 +24,13 @@ Route::get('/auth/redirect', [SocialiteController::class, 'redirect'])->name('au
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('auth.socialite.callback');
 
 Route::group(['middleware' => ['auth', 'useradmin']], function () {
+    Route::get('/dashboard', [MenuController::class, 'dashboard'])->name('dashboard');
+
     Route::get ('/about', [MenuController::class, 'about'])->name('about');
     Route::get ('/faq', [MenuController::class, 'faq'])->name('faq');
     Route::get ('/contact', [MenuController::class, 'contact'])->name('contact');
     Route::get ('/privacy-policy', [MenuController::class, 'privacy_policy'])->name('privacy-policy');
 
     Route::resource('tickets', ReportController::class);
+    Route::resource('role', RoleController::class);
 });

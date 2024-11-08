@@ -95,38 +95,50 @@
 
             <div class="flex justify-between mt-5">
                 <button type="button" onclick="history.back()" class="p-2 bg-gray-400 text-white rounded">Kembali</button>
-                <button class="p-2 bg-pink-500 text-white rounded" type="submit">Kirim</button>
+                <button class="p-2 bg-pink-500 text-white rounded" id="submitButton" type="submit">Kirim</button>
             </div>
         </form>
     </div>
 @endsection
 
 @section('scripts')
+    // JQuery
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    // Dropzone
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
     <script>
-        Dropzone.autoDiscover = false; // Disable auto-discovery to avoid conflicts
+        Dropzone.autoDiscover = false;
 
-        // Initialize Dropzone on the #file-dropzone element
+        // Initialize Dropzone
         var fileDropzone = new Dropzone("#file-dropzone", {
             url: "{{ route('tickets.store') }}",
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}" // Tambahkan CSRF token di header
             },
-            paramName: "files[]", // Set file parameter as an array
-            autoProcessQueue: false, // Disable automatic upload to control it manually
-            parallelUploads: 5, // Upload all files in the queue at once
-            maxFiles: 5, // Maximum of 5 files
-            maxFilesize: 5, // Maximum file size of 5 MB per file
-            acceptedFiles: ".jpeg,.jpg,.png,.pdf,.doc,.docx", // Allowed file types
-            addRemoveLinks: true, // Show link to remove files
+            autoProcessQueue: false, // prevent auto upload
+            uploadMultiple: true, // allows handling multiple files in one request
+            parallelUploads: 5, // process up to 5 files at once
+            maxFiles: 5,
+            maxFilesize: 5, // in MB
+            acceptedFiles: ".jpeg,.jpg,.png",
+            addRemoveLinks: true,
             dictDefaultMessage: 'Drag & drop files here or click to select',
 
             init: function() {
                 var myDropzone = this;
 
-                // Add extra form data to Dropzone before sending
-                myDropzone.on("sendingmultiple", function(files, xhr, formData) {
-                    // Append each form field to the Dropzone request
+                document.getElementById("submitButton").addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Ensure files are in the FormData manually
+                    var formData = new FormData(document.getElementById("reportForm"));
+                    myDropzone.getQueuedFiles().forEach((file, index) => {
+                        formData.append('files[]', file); // Add each file to FormData
+                    });
+
+                    // Append other form fields to FormData
                     formData.append("kategori_aduan", document.querySelector("[name=kategori_aduan]")
                         .value);
                     formData.append("prioritas_aduan", document.querySelector(
@@ -136,41 +148,23 @@
                         .value);
                     formData.append("deskripsi_pengaduan", document.querySelector(
                         "[name=deskripsi_pengaduan]").value);
-                });
 
-                // Handle form submission manually
-                document.querySelector("button[type=submit]").addEventListener("click", function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (myDropzone.getQueuedFiles().length > 0) {
-                        myDropzone.processQueue(); // Manually process the Dropzone queue
-                    } else {
-                        document.getElementById("reportForm")
-                            .submit(); // Submit form if no files are queued
-                    }
-                });
-
-                // Alert if maximum file count is exceeded
-                myDropzone.on("maxfilesexceeded", function(file) {
-                    myDropzone.removeFile(file); // Remove excess file
-                    alert("Anda hanya dapat mengupload hingga 5 file.");
-                });
-
-                // Handle file size validation
-                myDropzone.on("addedfile", function(file) {
-                    if (file.size / 1024 / 1024 > 5) { // Check if file exceeds 5 MB
-                        myDropzone.removeFile(file); // Remove file if too large
-                        alert("File terlalu besar. Maksimal 5 MB.");
-                    }
-                });
-
-                // Success and error handling for file upload
-                myDropzone.on("successmultiple", function(files, response) {
-                    console.log("Files uploaded successfully:", response);
-                });
-                myDropzone.on("errormultiple", function(files, response) {
-                    console.log("File upload error:", response);
+                    // Manually send the AJAX request with FormData
+                    $.ajax({
+                        url: "{{ route('tickets.store') }}",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log("Files uploaded successfully:", response);
+                            location.reload(); // Reload page or handle success
+                        },
+                        error: function(xhr) {
+                            console.log("File upload error:", xhr.responseJSON);
+                            // Handle errors, e.g., show error messages from xhr.responseJSON.errors
+                        }
+                    });
                 });
             }
         });

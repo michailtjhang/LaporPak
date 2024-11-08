@@ -50,11 +50,31 @@ class ReportController extends Controller
             'prioritas_aduan' => 'required',
             'tautan_konten' => 'required',
             'deskripsi_pengaduan' => 'required|string',
+            'file' => 'required|mimes:jpeg,jpg,png|max:5120',
             'files' => 'required|array|max:5', // Memastikan file dalam bentuk array
             'files.*' => 'file|mimes:jpeg,jpg,png|max:5120' // Validasi tiap file
         ]);
 
         try {
+            // if ($request->hasFile('files')) {
+            //     foreach ($request->file('files') as $file) {
+            //         $originalPath = $file->getRealPath(); // Get the original path of the uploaded file
+
+            //         // Now, you can use the original path to upload to Cloudinary
+            //         $cloudinaryResponse = Cloudinary::upload($originalPath, [
+            //             'folder' => 'uploads', // Set your desired folder in Cloudinary
+            //             'use_filename' => true,
+            //             'unique_filename' => false
+            //         ]);
+
+            //         // Optionally, store the Cloudinary URL or public ID if needed
+            //         $cloudinaryUrl = $cloudinaryResponse->getSecurePath();
+
+            //         // Save the Cloudinary URL or other information to your database as needed
+            //         // Example: $fileModel->path = $cloudinaryUrl;
+            //     }
+            // }
+
             $file = $request->file('file');
             $fileName = date('YmdHis') . time() . '.' . $file->getClientOriginalExtension();
             // $file->move(public_path('files'), $fileName);
