@@ -30,6 +30,11 @@ class User extends Authenticatable
         'refresh_token',
     ];
 
+    static public function getRecords()
+    {
+        return User::with('role')->where('role_id', '=', '01j8kkdbh8zrcamhvrmkesrsxy')->orderBy('updated_at', 'desc')->get();
+    }
+
     static public function getSingleRecord($id)
     {
         return User::with('role')->find($id);

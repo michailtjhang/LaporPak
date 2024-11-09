@@ -6,6 +6,7 @@ use App\Http\Controllers\System\MenuController;
 use App\Http\Controllers\System\RoleController;
 use App\Http\Controllers\System\ReportController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\System\UserController;
 
 Route::get('/', function () {
     return view('auth.register');
@@ -33,4 +34,5 @@ Route::group(['middleware' => ['auth', 'useradmin']], function () {
 
     Route::resource('tickets', ReportController::class);
     Route::resource('role', RoleController::class);
+    Route::resource('users', UserController::class);
 });

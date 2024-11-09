@@ -1,12 +1,8 @@
 @extends('system.layouts.app')
 
-@section('css')
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-@endsection
-
 @section('content')
     <div class="bg-white p-6 rounded-lg shadow mb-6">
-        <h2 class="text-2xl font-bold mb-4">Laporan Aduan {{ $data->id_aduan }}</h2>
+        <h2 class="text-2xl font-bold mb-4">Laporan Aduan {{ $data['aduan']->id_aduan }}</h2>
         <div class="overflow-x-auto">
 
             <div id="gallery" class="relative w-full" data-carousel="slide">
@@ -67,7 +63,7 @@
                                     Kategori
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ $data->kategori->nama_kategori }}
+                                    {{ $data['aduan']->kategori->nama_kategori }}
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-200">
@@ -75,7 +71,7 @@
                                     Lokasi
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ $data->lokasi_kejadian }}
+                                    {{ $data['aduan']->lokasi_kejadian }}
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-200">
@@ -83,7 +79,7 @@
                                     Status
                                 </th>
                                 <td class="px-6 py-4">
-                                    @if ($data->status_aduan == '0')
+                                    @if ($data['aduan']->status_aduan == '0')
                                         <span
                                             class="px-2 py-1 rounded-full bg-yellow-400 text-yellow-900 text-xs font-semibold">Belum
                                             Selesai</span>
@@ -98,11 +94,54 @@
                                     Deskripsi
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ $data->deskripsi_pengaduan }}
+                                    {{ $data['aduan']->deskripsi_pengaduan }}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="m-4">
+                        @if (!empty($data['PermissionEdit']) && $data['status'] === 0)
+                            <form action="{{ route('tickets.update', $data['aduan']->id) }}" method="post">
+                                @csrf
+                                @method('PATCH')
+
+                                <div class="mb-4">
+                                    <label class="block text-xl font-semibold text-black mb-2">Verifikasi</label>
+                                    <div class="flex items-center space-x-6">
+
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="status" value="1" id="tanggapi"
+                                                class="mr-2 checked:bg-pink-500" onclick="onlyOne(this)">
+                                            <label for="tanggapi" class="text-lg text-gray-700">Ditanggapi</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="status" value="2" id="tidak-tanggapi"
+                                                class="mr-2 checked:bg-pink-500" onclick="onlyOne(this)">
+                                            <label for="tidak-tanggapi" class="text-lg text-gray-700">Tidak
+                                                Ditanggapi</label>
+                                        </div>
+
+                                    </div>
+
+                                    @error('status')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="flex justify-between mt-5">
+                                    <button type="button" onclick="history.back()"
+                                        class="p-2 bg-gray-400 text-white rounded">Kembali</button>
+                                    <button class="p-2 bg-pink-500 text-white rounded" id="submitButton"
+                                        type="submit">Verifikasi</button>
+                                </div>
+                            </form>
+                        @else
+                            <div class="flex justify-between mt-5">
+                                <button type="button" onclick="history.back()"
+                                    class="p-2 bg-gray-400 text-white rounded">Kembali</button>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -111,5 +150,14 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script>
+        function onlyOne(checkbox) {
+            var checkboxes = document.getElementsByName('status');
+            checkboxes.forEach((item) => {
+                if (item !== checkbox) {
+                    item.checked = false
+                }
+            })
+        }
+    </script>
 @endsection

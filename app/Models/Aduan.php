@@ -25,7 +25,7 @@ class Aduan extends Model
         'status_aduan',
     ];
 
-    protected static $recordEvents = ['created'];
+    protected static $recordEvents = ['created', 'updated'];
 
     public function getActivitylogOptions(): LogOptions
     {

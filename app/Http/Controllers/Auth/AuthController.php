@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function login()
     {
         if (!empty(Auth::check())) {
-            if (Auth::user()->role->name == 'Manager') {
+            if (Auth::user()->role->name == 'Manager' || Auth::user()->role->name == 'Verified') {
                 return redirect()->intended('dashboard');
             } else {
                 return redirect()->intended('tickets');
@@ -38,7 +38,7 @@ class AuthController extends Controller
         }
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->role->name == 'Manager') {
+            if (Auth::user()->role->name == 'Manager' || Auth::user()->role->name == 'Verified') {
                 return redirect()->intended('dashboard');
             } else {
                 return redirect()->intended('tickets');

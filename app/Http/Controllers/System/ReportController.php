@@ -6,9 +6,9 @@ use App\Models\Aduan;
 use App\Models\Bukti;
 use Illuminate\Http\Request;
 use App\Models\KategoriAduan;
+use App\Models\PermissionRole;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
@@ -113,15 +113,18 @@ class ReportController extends Controller
      */
     public function show(string $id)
     {
-        $data = Aduan::where('id_aduan', $id)
-        ->where('id_pengguna', Auth::user()->id)
-        ->with('kategori') 
-        ->first();
+        $data['aduan'] = Aduan::where('id_aduan', $id)
+            ->where('id_pengguna', Auth::user()->id)
+            ->with('kategori')
+            ->first();
+
+        $data['PermissionEdit'] = PermissionRole::getPermission('Edit Aduan', Auth::user()->role_id);
+        $data['status'] = Aduan::where('id_aduan', $id)->value('status_aduan');
 
         $images = Bukti::where('id_aduan', $id)->get();
 
         return view('system.reports.show', [
-            'title' => 'Detail Laporan Aduan ' . $data->id_aduan,
+            'title' => 'Detail Laporan Aduan ' . $data['aduan']->id_aduan,
             'data' => $data,
             'images' => $images
         ]);
@@ -140,7 +143,16 @@ class ReportController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'status' => 'required'
+        ]);
+
+        $aduan = Aduan::findOrFail($id);
+        $aduan->update([
+            'status_aduan' => $request->status
+        ]);
+
+        return redirect('tickets')->with('success', 'Status Aduan Berhasil Diubah');
     }
 
     /**

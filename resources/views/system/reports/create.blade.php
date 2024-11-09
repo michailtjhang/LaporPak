@@ -133,7 +133,7 @@
                     formData.append("prioritas_aduan", document.querySelector(
                         "[name=prioritas_aduan]:checked") ? document.querySelector(
                         "[name=prioritas_aduan]:checked").value : '');
-                    formData.append("tautan_konten", document.querySelector("[name=tautan_konten]")
+                    formData.append("lokasi_kejadian", document.querySelector("[name=lokasi_kejadian]")
                         .value);
                     formData.append("deskripsi_pengaduan", document.querySelector(
                         "[name=deskripsi_pengaduan]").value);

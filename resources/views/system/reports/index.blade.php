@@ -47,8 +47,7 @@
                                 </td>
                             @else
                                 <td>
-                                    <span
-                                        class="px-2 py-1 rounded-full bg-pink-100 text-pink-500 text-xs font-semibold">NON
+                                    <span class="px-2 py-1 rounded-full bg-pink-100 text-pink-500 text-xs font-semibold">NON
                                         URGENT</span>
                                 </td>
                             @endif
@@ -59,10 +58,15 @@
                                         class="px-2 py-1 rounded-full bg-yellow-400 text-yellow-900 text-xs font-semibold">Belum
                                         Selesai</span>
                                 </td>
-                            @else
+                            @elseif ($row->status_aduan == '1')
                                 <td>
                                     <span
                                         class="px-2 py-1 rounded-full bg-green-400 text-green-900 text-xs font-semibold">Selesai</span>
+                                </td>
+                            @else
+                                <td>
+                                    <span
+                                        class="px-2 py-1 rounded-full bg-gray-400 text-gray-900 text-xs font-semibold">Ditolak</span>
                                 </td>
                             @endif
                             <td>{{ $row->updated_at->locale('in_id')->diffForHumans() }}</td>
