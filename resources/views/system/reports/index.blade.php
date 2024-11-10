@@ -16,8 +16,10 @@
                 <button class="px-4 py-2 border border-green-500 text-green-500 font-medium rounded">Laporan Selesai:
                     {{ $countFinished }}</button>
             </div>
-            <a href="{{ route('tickets.create') }}" class="px-4 py-2 bg-pink-500 text-white rounded shadow">Tambah
-                Laporan</a>
+            @if (!empty($data['PermissionAdd']))
+                <a href="{{ route('tickets.create') }}" class="px-4 py-2 bg-pink-500 text-white rounded shadow">Tambah
+                    Laporan</a>
+            @endif
         </div>
         <div class="overflow-x-auto">
 

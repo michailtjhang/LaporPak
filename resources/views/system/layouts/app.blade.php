@@ -26,6 +26,7 @@
                     $PermissionUser = App\Models\PermissionRole::getPermission('User', Auth::user()->role_id);
                     $PermissionRole = App\Models\PermissionRole::getPermission('Role', Auth::user()->role_id);
                     $permissionDashboard = App\Models\PermissionRole::getPermission('Dashboard', Auth::user()->role_id);
+                    $permissionAduan = App\Models\PermissionRole::getPermission('Aduan', Auth::user()->role_id);
                 @endphp
 
                 @if (!empty($permissionDashboard))
@@ -33,8 +34,10 @@
                         class="block py-2 px-3 shadow rounded-lg text-base font-semibold {{ Request::segment(1) == 'dashboard' ? 'text-rose-600 bg-rose-100' : 'text-black bg-white' }}">Dashboard</a>
                 @endif
 
-                <a href="{{ url('tickets') }}"
-                    class="block py-2 px-3 shadow rounded-lg text-base font-semibold {{ Request::segment(1) == 'tickets' ? 'text-rose-600 bg-rose-100' : 'text-black bg-white' }}">Aduan</a>
+                @if (!empty($permissionAduan))
+                    <a href="{{ url('tickets') }}"
+                        class="block py-2 px-3 shadow rounded-lg text-base font-semibold {{ Request::segment(1) == 'tickets' ? 'text-rose-600 bg-rose-100' : 'text-black bg-white' }}">Aduan</a>
+                @endif
 
                 @if (!empty($PermissionRole))
                     <a href="{{ route('role.index') }}"

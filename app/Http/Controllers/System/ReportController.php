@@ -17,9 +17,26 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $data['aduans'] = Aduan::where('id_pengguna', Auth::user()->id)->get();
+        $PermissionRole = PermissionRole::getPermission('Aduan', Auth::user()->role_id);
+
+        if (empty($PermissionRole)) {
+            abort(404);
+        }
+
+        $data['PermissionAdd'] = PermissionRole::getPermission('Add Aduan', Auth::user()->role_id);
+        $data['PermissionEdit'] = PermissionRole::getPermission('Edit Aduan', Auth::user()->role_id);
+
+        // Get all aduan
+        if ($data['PermissionEdit'] == true) {
+            $data['aduans'] = Aduan::get();
+        } else {
+            $data['aduans'] = Aduan::where('id_pengguna', Auth::user()->id)->get();
+        }
+
+        // Count aduan
         $countFinished = Aduan::where('id_pengguna', Auth::user()->id)->where('status_aduan', '1')->count();
         $countPending = Aduan::where('id_pengguna', Auth::user()->id)->where('status_aduan', '0')->count();
+
         return view('system.reports.index', [
             'title' => 'Laporan Aduan',
             'data' => $data,
@@ -33,7 +50,14 @@ class ReportController extends Controller
      */
     public function create()
     {
+        $PermissionRole = PermissionRole::getPermission('Add Aduan', Auth::user()->role_id);
+
+        if (empty($PermissionRole)) {
+            abort(404);
+        }
+
         $kategori = KategoriAduan::get();
+
         return view('system.reports.create', [
             'title' => 'Form Laporan Aduan Baru',
             'kategoris' => $kategori
@@ -113,14 +137,26 @@ class ReportController extends Controller
      */
     public function show(string $id)
     {
+        $data['PermissionEdit'] = PermissionRole::getPermission('Edit Aduan', Auth::user()->role_id);
+
+        // Check if the user has permission to view the aduan
+        if (
+            !Aduan::where('id_pengguna', Auth::user()->id)->where('id_aduan', $id)->exists()
+            || $data['PermissionEdit'] == false
+        ) {
+            return redirect('tickets')->with('error', 'Laporan Aduan Tidak Ditemukan');
+        }
+
+        // Get the status of the aduan
+        $data['status'] = Aduan::where('id_aduan', $id)->value('status_aduan');
+
+        // Get the aduan
         $data['aduan'] = Aduan::where('id_aduan', $id)
             ->where('id_pengguna', Auth::user()->id)
             ->with('kategori')
             ->first();
 
-        $data['PermissionEdit'] = PermissionRole::getPermission('Edit Aduan', Auth::user()->role_id);
-        $data['status'] = Aduan::where('id_aduan', $id)->value('status_aduan');
-
+        // Get the images
         $images = Bukti::where('id_aduan', $id)->get();
 
         return view('system.reports.show', [

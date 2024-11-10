@@ -42,6 +42,7 @@ class MenuController extends Controller
         if (empty($PermissionRole)) {
             abort(404);
         }
+        
         return view('system.dashboard', [
             'title' => 'Dashboard',
         ]);
