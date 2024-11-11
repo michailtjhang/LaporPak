@@ -28,7 +28,7 @@ class UserController extends Controller
         
         $data['user'] = User::getRecords();
         return view('system.user.index', [
-            'page_title' => 'User List',
+            'title' => 'User List',
             'data' => $data
         ]);
     }
@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $data = Role::getRecords();
         return view('system.user.create', [
-            'page_title' => 'Add New User',
+            'title' => 'Add New User',
             'data' => $data
         ]);
     }
@@ -108,7 +108,7 @@ class UserController extends Controller
         $data['user'] = User::getSingleRecord($id);
         $data['role'] = Role::getRecords();
         return view('system.user.edit', [
-            'page_title' => 'Edit User',
+            'title' => 'Edit User',
             'data' => $data
         ]);
     }

@@ -28,7 +28,7 @@ class RoleController extends Controller
         $data['role'] = Role::getRecords();
 
         return view('system.role.index', [
-            'page_title' => 'Role List',
+            'title' => 'Role List',
             'data' => $data
         ]);
     }
@@ -46,7 +46,7 @@ class RoleController extends Controller
         $data = Permission::getRecords();
 
         return view('system.role.create', [
-            'page_title' => 'Add New Role',
+            'title' => 'Add New Role',
             'data' => $data
         ]);
     }
@@ -99,7 +99,7 @@ class RoleController extends Controller
         $data['permissionRole'] = PermissionRole::getRolePermission($id);
 
         return view('system.role.edit', [
-            'page_title' => 'Role Detail',
+            'title' => 'Role Detail',
             'data' => $data
         ]);
     }
