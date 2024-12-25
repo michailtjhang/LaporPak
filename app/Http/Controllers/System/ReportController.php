@@ -109,7 +109,7 @@ class ReportController extends Controller
 
                 // Upload to Cloudinary
                 $cloudinaryResponse = cloudinary()->upload($originalPath, [
-                    'folder' => 'files',
+                    'folder' => 'laporan_aduan/files',
                     'use_filename' => true,
                     'unique_filename' => true,
                 ]);
